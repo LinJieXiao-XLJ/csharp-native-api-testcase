@@ -62,17 +62,26 @@ csharp-native-api-testcase/
 # 从 https://dotnet.microsoft.com/download/dotnet/8.0 下载安装
 ```
 
-#### 2. 克隆项目
+#### 2. 克隆项目并安装依赖
 
 ```powershell
+# 【不推荐】使用最新的发版（不是最新的源码依赖）：dotnet add package Apache.IoTDB # 里面包含了 Thrift，故不需要添加， 
+
+# 1、拉取源码，并编译生成依赖，生成的 dll 在 iotdb-client-csharp 的 src/Apache.IoTDB/bin/Release 下
+git clone https://github.com/apache/iotdb-client-csharp.git
+cd iotdb-client-csharp
+dotnet build --configuration Release src/Apache.IoTDB/Apache.IoTDB.csproj
+
+# 2、拉去已有测试项目
 git clone https://github.com/LinJieXiao-XLJ/csharp-native-api-testcase.git
 cd csharp-native-api-testcase
-```
+# 引入依赖：根据版本选择一个目录下的 dll 文件，将 dll 文件放在 C# 项目的 lib 目录中，并确保 csharp-native-api-testcase.csproj 文件中 Include 正确
 
-#### 3. 安装依赖
+# 3、添加 Thrift 包
+dotnet add package Thrift.NetStd
 
-```powershell
-dotnet restore
+# 4、【可选】其他：添加 NLog  和 iotdb 包（用于日志记录）
+dotnet add package NLog
 ```
 
 ### Linux (Ubuntu)
@@ -86,17 +95,26 @@ chmod +x ./dotnet-install.sh
 ./dotnet-install.sh --channel 8.0
 ```
 
-#### 2. 克隆项目
+#### 2. 克隆项目并安装依赖
 
-```bash
+```powershell
+# 【不推荐】使用最新的发版（不是最新的源码依赖）：dotnet add package Apache.IoTDB # 里面包含了 Thrift，故不需要添加， 
+
+# 1、拉取源码，并编译生成依赖，生成的 dll 在 iotdb-client-csharp 的 src/Apache.IoTDB/bin/Release 下
+git clone https://github.com/apache/iotdb-client-csharp.git
+cd iotdb-client-csharp
+dotnet build --configuration Release src/Apache.IoTDB/Apache.IoTDB.csproj
+
+# 2、拉去已有测试项目
 git clone https://github.com/LinJieXiao-XLJ/csharp-native-api-testcase.git
 cd csharp-native-api-testcase
-```
+# 引入依赖：根据版本选择一个目录下的 dll 文件，将 dll 文件放在 C# 项目的 lib 目录中，并确保 csharp-native-api-testcase.csproj 文件中 Include 正确
 
-#### 3. 安装依赖
+# 3、添加 Thrift 包
+dotnet add package Thrift.NetStd
 
-```bash
-dotnet restore
+# 4、【可选】其他：添加 NLog  和 iotdb 包（用于日志记录）
+dotnet add package NLog
 ```
 
 ---
