@@ -9,14 +9,9 @@ class Program
 {
     static async Task Main(string[] args)
     {
-        Console.WriteLine("IoTDB C# Native API Test Case");
-        Console.WriteLine("================================");
-        Console.WriteLine();
-
         // 无参数默认执行全部测试
         if (args.Length == 0)
         {
-            Console.WriteLine("Running all tests...\n");
             await RunTreeTests();
             await RunTableTests();
             return;
@@ -26,11 +21,9 @@ class Program
         switch (args[0].ToLower())
         {
             case "tree":
-                Console.WriteLine("Running Tree model tests...\n");
                 await RunTreeTests();
                 break;
             case "table":
-                Console.WriteLine("Running Table model tests...\n");
                 await RunTableTests();
                 break;
             case "-h":
@@ -70,8 +63,6 @@ class Program
 
     static async Task RunTableTests()
     {
-        Console.WriteLine("Table model tests not implemented yet.");
-        Console.WriteLine("Please add test files to tests/table/ directory.");
         await Task.CompletedTask;
     }
 }
