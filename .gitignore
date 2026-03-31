@@ -22,3 +22,15 @@ x86/
 *.user
 *.userosscache
 *.sln.docstates
+
+# Test results
+TestResults/
+coverage.xml
+coverage-report/
+
+# Package files
+*.nupkg
+*.snupkg
+
+# Logs
+*.log
