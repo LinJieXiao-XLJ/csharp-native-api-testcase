@@ -47,18 +47,19 @@ class Program
 
     static void PrintUsage()
     {
-        Console.WriteLine("Usage: dotnet run -- [command]");
+        Console.WriteLine("Usage: dotnet run [command]");
         Console.WriteLine();
         Console.WriteLine("Commands:");
-        Console.WriteLine("  (no args)      Run all tests (default)");
         Console.WriteLine("  tree           Run tree model tests");
         Console.WriteLine("  table          Run table model tests");
         Console.WriteLine("  help           Show this help message");
         Console.WriteLine();
+        Console.WriteLine("Note: Running without arguments executes all tests by default.");
+        Console.WriteLine();
         Console.WriteLine("Examples:");
-        Console.WriteLine("  dotnet run --          # Run all tests");
-        Console.WriteLine("  dotnet run -- tree     # Run tree model tests");
-        Console.WriteLine("  dotnet run -- table    # Run table model tests");
+        Console.WriteLine("  dotnet run           # Run all tests");
+        Console.WriteLine("  dotnet run -- tree   # Run tree model tests");
+        Console.WriteLine("  dotnet run -- table  # Run table model tests");
     }
 
     static async Task RunTreeTests()
