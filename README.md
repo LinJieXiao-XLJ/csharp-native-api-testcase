@@ -38,6 +38,7 @@ csharp-native-api-testcase/
 ### 必需环境
 
 - .NET 8.0 SDK
+- Thrift 0.14.1
 
 
 ### 配置
@@ -132,17 +133,19 @@ dotnet run
 
 ```bash
 # 运行 tree 模型测试
-dotnet run -- -m tree
+dotnet run -- tree
 
 # 运行 table 模型测试
-dotnet run -- -m table
+dotnet run -- table
 ```
 
 #### 查看帮助
 
 ```bash
-dotnet run -- -h
+dotnet run -- help
 ```
+
+> **说明：** `--` 是 dotnet CLI 的参数分隔符，用于区分 dotnet 参数和程序参数。`--` 后面的参数会传递给程序。
 
 ### 代码覆盖率测试
 

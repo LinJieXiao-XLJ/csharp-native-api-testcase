@@ -23,63 +23,42 @@ class Program
         }
 
         // 解析参数
-        for (int i = 0; i < args.Length; i++)
+        switch (args[0].ToLower())
         {
-            switch (args[i].ToLower())
-            {
-                case "-m":
-                    if (i + 1 < args.Length)
-                    {
-                        var mode = args[i + 1].ToLower();
-                        i++; // 跳过下一个参数
-                        switch (mode)
-                        {
-                            case "tree":
-                                Console.WriteLine("Running Tree model tests...\n");
-                                await RunTreeTests();
-                                break;
-                            case "table":
-                                Console.WriteLine("Running Table model tests...\n");
-                                await RunTableTests();
-                                break;
-                            default:
-                                Console.WriteLine($"Unknown mode: {mode}");
-                                PrintUsage();
-                                break;
-                        }
-                    }
-                    else
-                    {
-                        Console.WriteLine("Error: -m requires a mode argument (tree/table)");
-                        PrintUsage();
-                    }
-                    break;
-                case "-h":
-                case "--help":
-                    PrintUsage();
-                    break;
-                default:
-                    Console.WriteLine($"Unknown argument: {args[i]}");
-                    PrintUsage();
-                    break;
-            }
+            case "tree":
+                Console.WriteLine("Running Tree model tests...\n");
+                await RunTreeTests();
+                break;
+            case "table":
+                Console.WriteLine("Running Table model tests...\n");
+                await RunTableTests();
+                break;
+            case "-h":
+            case "--help":
+            case "help":
+                PrintUsage();
+                break;
+            default:
+                Console.WriteLine($"Unknown argument: {args[0]}");
+                PrintUsage();
+                break;
         }
     }
 
     static void PrintUsage()
     {
-        Console.WriteLine("Usage: dotnet run [options]");
+        Console.WriteLine("Usage: dotnet run -- [command]");
         Console.WriteLine();
-        Console.WriteLine("Options:");
+        Console.WriteLine("Commands:");
         Console.WriteLine("  (no args)      Run all tests (default)");
-        Console.WriteLine("  -m tree        Run tree model tests");
-        Console.WriteLine("  -m table       Run table model tests");
-        Console.WriteLine("  -h, --help     Show this help message");
+        Console.WriteLine("  tree           Run tree model tests");
+        Console.WriteLine("  table          Run table model tests");
+        Console.WriteLine("  help           Show this help message");
         Console.WriteLine();
         Console.WriteLine("Examples:");
-        Console.WriteLine("  dotnet run              # Run all tests");
-        Console.WriteLine("  dotnet run -m tree      # Run tree model tests");
-        Console.WriteLine("  dotnet run -m table     # Run table model tests");
+        Console.WriteLine("  dotnet run --          # Run all tests");
+        Console.WriteLine("  dotnet run -- tree     # Run tree model tests");
+        Console.WriteLine("  dotnet run -- table    # Run table model tests");
     }
 
     static async Task RunTreeTests()
