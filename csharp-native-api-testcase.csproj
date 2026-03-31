@@ -8,4 +8,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Reference Include="Apache.IoTDB">
+      <HintPath>lib\Apache.IoTDB.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

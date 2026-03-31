@@ -21,14 +21,14 @@
 csharp-native-api-testcase/
 ├── conf/
 │   └── config.properties      # 配置文件
+├── lib/
+│   └── Apache.IoTDB.dll       # IoTDB C# 客户端库
 ├── tests/
 │   ├── table/                 # Table 测试用例
 │   └── tree/                  # Tree 测试用例
-├── src/
-│   └── csharp-native-api-testcase/
-│       ├── Program.cs         # 入口文件
-│       └── csharp-native-api-testcase.csproj
-├── csharp-native-api-testcase.sln  # 解决方案文件
+├── Program.cs                 # 入口文件
+├── csharp-native-api-testcase.csproj  # 项目文件
+├── csharp-native-api-testcase.sln     # 解决方案文件
 └── README.md                  # 说明文档
 ```
 
@@ -39,7 +39,6 @@ csharp-native-api-testcase/
 ### 必需环境
 
 - .NET 8.0 SDK
-- Apache IoTDB 服务器
 
 ### 依赖库
 
@@ -114,17 +113,17 @@ dotnet restore
 #### 运行所有测试
 
 ```bash
-dotnet run --project src/csharp-native-api-testcase -- --all
+dotnet run -- --all
 ```
 
 #### 运行单个测试
 
 ```bash
 # 运行 table 模型测试
-dotnet run --project src/csharp-native-api-testcase -- --table
+dotnet run -- --table
 
 # 运行 tree 模型测试
-dotnet run --project src/csharp-native-api-testcase -- --tree
+dotnet run -- --tree
 ```
 
 ### 代码覆盖率测试
