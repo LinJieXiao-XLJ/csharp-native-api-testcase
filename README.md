@@ -26,7 +26,7 @@ csharp-native-api-testcase/
 ├── tests/
 │   ├── table/                 # Table 测试用例
 │   └── tree/                  # Tree 测试用例
-├── Program.cs                 # 入口文件
+├── main.cs                    # 入口文件
 ├── csharp-native-api-testcase.csproj  # 项目文件
 └── README.md                  # 说明文档
 ```
@@ -38,11 +38,6 @@ csharp-native-api-testcase/
 ### 必需环境
 
 - .NET 8.0 SDK
-
-### 依赖库
-
-- Apache IoTDB C# Client (待添加)
-
 
 
 ### 配置
@@ -130,17 +125,23 @@ dotnet add package NLog
 #### 运行所有测试
 
 ```bash
-dotnet run -- --all
+dotnet run
 ```
 
-#### 运行单个测试
+#### 运行指定模型测试
 
 ```bash
-# 运行 table 模型测试
-dotnet run -- --table
-
 # 运行 tree 模型测试
-dotnet run -- --tree
+dotnet run -- -m tree
+
+# 运行 table 模型测试
+dotnet run -- -m table
+```
+
+#### 查看帮助
+
+```bash
+dotnet run -- -h
 ```
 
 ### 代码覆盖率测试
