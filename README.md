@@ -28,7 +28,6 @@ csharp-native-api-testcase/
 │   └── tree/                  # Tree 测试用例
 ├── Program.cs                 # 入口文件
 ├── csharp-native-api-testcase.csproj  # 项目文件
-├── csharp-native-api-testcase.sln     # 解决方案文件
 └── README.md                  # 说明文档
 ```
 
@@ -136,7 +135,7 @@ dotnet tool install --global coverlet.console
 dotnet tool install --global dotnet-reportgenerator-globaltool
 
 # 运行测试并生成覆盖率报告
-coverlet src/csharp-native-api-testcase/bin/Debug/net8.0/csharp-native-api-testcase.dll --target "dotnet" --targetargs "test" --output coverage.xml
+coverlet bin/Debug/net8.0/csharp-native-api-testcase.dll --target "dotnet" --targetargs "test" --output coverage.xml
 reportgenerator -reports:coverage.xml -targetdir:coverage-report
 ```
 
