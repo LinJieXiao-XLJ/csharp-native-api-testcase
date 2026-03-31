@@ -26,32 +26,32 @@ using Apache.IoTDB.DataStructure;
 namespace csharp_native_api_testcase.Tests.Tree;
 
 /// <summary>
-/// SessionPool test cases for IoTDB Tree model (3C3D Cluster)
+/// SessionPool 测试用例 - IoTDB 树模型 (3C3D 集群)
 ///
-/// Tests connection pool operations based on commit 6f451bdff65a816f1ac59a266875b41ad2610af8
-/// which fixed SessionPool reconnection issues.
+/// 基于 commit 6f451bdff65a816f1ac59a266875b41ad2610af8 测试连接池操作
+/// 该 commit 修复了 SessionPool 重连问题
 ///
-/// Key features tested:
-/// - Pool creation with cluster node URLs
-/// - Database management
-/// - Data insertion operations
-/// - Query operations
-/// - Pool health metrics monitoring
+/// 主要测试功能：
+/// - 集群节点 URL 创建连接池
+/// - 数据库管理
+/// - 数据插入操作
+/// - 查询操作
+/// - 连接池健康指标监控
 /// </summary>
 public class Session_pool_Test
 {
-    // Cluster node URLs (3C3D: 3 ConfigNode + 3 DataNode)
+    // 集群节点 URL 列表 (3C3D: 3 个 ConfigNode + 3 个 DataNode)
     private readonly List<string> _nodeUrls;
 
-    // Single node fallback configuration
+    // 单节点回退配置
     private readonly string _host;
     private readonly int _port;
 
-    // Authentication
+    // 认证信息
     private readonly string _username;
     private readonly string _password;
 
-    // Pool configuration
+    // 连接池配置
     private readonly int _fetchSize;
     private readonly string _zoneId;
     private readonly int _poolSize;
@@ -60,7 +60,7 @@ public class Session_pool_Test
 
     public Session_pool_Test()
     {
-        // 3C3D Cluster configuration
+        // 3C3D 集群配置
         _nodeUrls = new List<string>
         {
             "127.0.0.1:6667",
@@ -68,15 +68,15 @@ public class Session_pool_Test
             "127.0.0.1:6669"
         };
 
-        // Default single node fallback
+        // 默认单节点回退配置
         _host = "127.0.0.1";
         _port = 6667;
 
-        // Authentication
+        // 认证信息
         _username = "root";
         _password = "root";
 
-        // Pool settings
+        // 连接池设置
         _fetchSize = 1024;
         _zoneId = "Asia/Shanghai";
         _poolSize = 8;
@@ -85,12 +85,12 @@ public class Session_pool_Test
     }
 
     /// <summary>
-    /// Test 1: Create SessionPool with cluster node URLs
-    /// This tests the pool's ability to connect to a 3C3D cluster
+    /// 测试 1: 使用集群节点 URL 创建 SessionPool
+    /// 测试连接池连接 3C3D 集群的能力
     /// </summary>
     public async Task Test_SessionPool_Cluster_Connection()
     {
-        Console.WriteLine("[Test] SessionPool cluster connection (3C3D)");
+        Console.WriteLine("[测试] SessionPool 集群连接 (3C3D)");
 
         try
         {
@@ -98,27 +98,27 @@ public class Session_pool_Test
 
             await sessionPool.Open();
 
-            Console.WriteLine($"  Pool opened successfully");
-            Console.WriteLine($"  Cluster nodes: {_nodeUrls.Count}");
-            Console.WriteLine($"  Available clients: {sessionPool.AvailableClients}");
-            Console.WriteLine($"  Total pool size: {sessionPool.TotalPoolSize}");
-            Console.WriteLine($"  Failed reconnections: {sessionPool.FailedReconnections}");
+            Console.WriteLine($"  连接池打开成功");
+            Console.WriteLine($"  集群节点数: {_nodeUrls.Count}");
+            Console.WriteLine($"  可用客户端数: {sessionPool.AvailableClients}");
+            Console.WriteLine($"  连接池总大小: {sessionPool.TotalPoolSize}");
+            Console.WriteLine($"  重连失败次数: {sessionPool.FailedReconnections}");
 
             await sessionPool.Close();
-            Console.WriteLine("[Pass] Test_SessionPool_Cluster_Connection");
+            Console.WriteLine("[通过] Test_SessionPool_Cluster_Connection");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[Fail] Test_SessionPool_Cluster_Connection: {ex.Message}");
+            Console.WriteLine($"[失败] Test_SessionPool_Cluster_Connection: {ex.Message}");
         }
     }
 
     /// <summary>
-    /// Test 2: Create SessionPool with single node (fallback)
+    /// 测试 2: 使用单节点创建 SessionPool (回退方案)
     /// </summary>
     public async Task Test_SessionPool_Single_Node()
     {
-        Console.WriteLine("[Test] SessionPool single node connection");
+        Console.WriteLine("[测试] SessionPool 单节点连接");
 
         try
         {
@@ -126,25 +126,25 @@ public class Session_pool_Test
 
             await sessionPool.Open(_enableRpcCompression);
 
-            Console.WriteLine($"  Pool opened to {_host}:{_port}");
-            Console.WriteLine($"  Available clients: {sessionPool.AvailableClients}");
-            Console.WriteLine($"  Total pool size: {sessionPool.TotalPoolSize}");
+            Console.WriteLine($"  连接池已连接到 {_host}:{_port}");
+            Console.WriteLine($"  可用客户端数: {sessionPool.AvailableClients}");
+            Console.WriteLine($"  连接池总大小: {sessionPool.TotalPoolSize}");
 
             await sessionPool.Close();
-            Console.WriteLine("[Pass] Test_SessionPool_Single_Node");
+            Console.WriteLine("[通过] Test_SessionPool_Single_Node");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[Fail] Test_SessionPool_Single_Node: {ex.Message}");
+            Console.WriteLine($"[失败] Test_SessionPool_Single_Node: {ex.Message}");
         }
     }
 
     /// <summary>
-    /// Test 3: Create database using SessionPool
+    /// 测试 3: 使用 SessionPool 创建数据库
     /// </summary>
     public async Task Test_Create_Database()
     {
-        Console.WriteLine("[Test] Create database using SessionPool");
+        Console.WriteLine("[测试] 使用 SessionPool 创建数据库");
 
         var sessionPool = new SessionPool(_nodeUrls, _username, _password, _fetchSize, _zoneId, _poolSize, _enableRpcCompression, _timeout);
         var dbName = "test_pool_db";
@@ -153,24 +153,24 @@ public class Session_pool_Test
         {
             await sessionPool.Open();
 
-            // Create database
+            // 创建数据库
             var result = await sessionPool.CreateDatabase(dbName);
-            Console.WriteLine($"  Create database '{dbName}' result: {result}");
+            Console.WriteLine($"  创建数据库 '{dbName}' 结果: {result}");
 
-            // Verify by querying using SQL
+            // 通过 SQL 查询验证
             var sqlResult = await sessionPool.ExecuteNonQueryStatementAsync($"SHOW DATABASES");
-            Console.WriteLine($"  Show databases executed");
+            Console.WriteLine($"  查询数据库列表已执行");
 
-            // Cleanup
+            // 清理
             await sessionPool.DeleteDatabaseAsync(dbName);
-            Console.WriteLine($"  Database '{dbName}' deleted");
+            Console.WriteLine($"  数据库 '{dbName}' 已删除");
 
             await sessionPool.Close();
-            Console.WriteLine("[Pass] Test_Create_Database");
+            Console.WriteLine("[通过] Test_Create_Database");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[Fail] Test_Create_Database: {ex.Message}");
+            Console.WriteLine($"[失败] Test_Create_Database: {ex.Message}");
             try
             {
                 await sessionPool.DeleteDatabaseAsync(dbName);
@@ -181,11 +181,11 @@ public class Session_pool_Test
     }
 
     /// <summary>
-    /// Test 4: Create timeseries using SessionPool via SQL
+    /// 测试 4: 通过 SQL 使用 SessionPool 创建时间序列
     /// </summary>
     public async Task Test_Create_Timeseries_SQL()
     {
-        Console.WriteLine("[Test] Create timeseries using SessionPool via SQL");
+        Console.WriteLine("[测试] 通过 SQL 使用 SessionPool 创建时间序列");
 
         var sessionPool = new SessionPool(_nodeUrls, _username, _password, _fetchSize, _zoneId, _poolSize, _enableRpcCompression, _timeout);
         var dbName = "test_pool_ts_db";
@@ -194,30 +194,30 @@ public class Session_pool_Test
         {
             await sessionPool.Open();
 
-            // Create database
+            // 创建数据库
             await sessionPool.CreateDatabase(dbName);
-            Console.WriteLine($"  Database '{dbName}' created");
+            Console.WriteLine($"  数据库 '{dbName}' 已创建");
 
-            // Create timeseries via SQL
+            // 通过 SQL 创建时间序列
             var createTsSql = $"CREATE TIMESERIES {dbName}.d1.s1 WITH DATATYPE=INT32, ENCODING=PLAIN";
             var result = await sessionPool.ExecuteNonQueryStatementAsync(createTsSql);
-            Console.WriteLine($"  Create timeseries result: {result}");
+            Console.WriteLine($"  创建时间序列结果: {result}");
 
-            // Query to verify
+            // 查询验证
             var showSql = $"SHOW TIMESERIES {dbName}.*";
             await sessionPool.ExecuteNonQueryStatementAsync(showSql);
-            Console.WriteLine($"  Show timeseries executed");
+            Console.WriteLine($"  查询时间序列已执行");
 
-            // Cleanup
+            // 清理
             await sessionPool.DeleteDatabaseAsync(dbName);
-            Console.WriteLine($"  Database '{dbName}' deleted");
+            Console.WriteLine($"  数据库 '{dbName}' 已删除");
 
             await sessionPool.Close();
-            Console.WriteLine("[Pass] Test_Create_Timeseries_SQL");
+            Console.WriteLine("[通过] Test_Create_Timeseries_SQL");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[Fail] Test_Create_Timeseries_SQL: {ex.Message}");
+            Console.WriteLine($"[失败] Test_Create_Timeseries_SQL: {ex.Message}");
             try
             {
                 await sessionPool.DeleteDatabaseAsync(dbName);
@@ -228,11 +228,11 @@ public class Session_pool_Test
     }
 
     /// <summary>
-    /// Test 5: Insert data using SQL
+    /// 测试 5: 使用 SQL 插入数据
     /// </summary>
     public async Task Test_Insert_Data_SQL()
     {
-        Console.WriteLine("[Test] Insert data using SQL");
+        Console.WriteLine("[测试] 使用 SQL 插入数据");
 
         var sessionPool = new SessionPool(_nodeUrls, _username, _password, _fetchSize, _zoneId, _poolSize, _enableRpcCompression, _timeout);
         var dbName = "test_pool_insert_db";
@@ -241,31 +241,31 @@ public class Session_pool_Test
         {
             await sessionPool.Open();
 
-            // Setup
+            // 环境准备
             await sessionPool.CreateDatabase(dbName);
             await sessionPool.ExecuteNonQueryStatementAsync($"CREATE TIMESERIES {dbName}.d1.temperature WITH DATATYPE=FLOAT, ENCODING=PLAIN");
             await sessionPool.ExecuteNonQueryStatementAsync($"CREATE TIMESERIES {dbName}.d1.humidity WITH DATATYPE=INT32, ENCODING=PLAIN");
-            Console.WriteLine($"  Setup completed");
+            Console.WriteLine($"  环境准备完成");
 
-            // Insert data via SQL
+            // 通过 SQL 插入数据
             var timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             var insertSql = $"INSERT INTO {dbName}.d1(timestamp, temperature, humidity) VALUES({timestamp}, 26.5, 65)";
             var result = await sessionPool.ExecuteNonQueryStatementAsync(insertSql);
-            Console.WriteLine($"  Insert data result: {result}");
+            Console.WriteLine($"  插入数据结果: {result}");
 
-            // Query to verify
+            // 查询验证
             var querySql = $"SELECT * FROM {dbName}.d1";
             await sessionPool.ExecuteNonQueryStatementAsync(querySql);
-            Console.WriteLine($"  Query executed");
+            Console.WriteLine($"  查询已执行");
 
-            // Cleanup
+            // 清理
             await sessionPool.DeleteDatabaseAsync(dbName);
             await sessionPool.Close();
-            Console.WriteLine("[Pass] Test_Insert_Data_SQL");
+            Console.WriteLine("[通过] Test_Insert_Data_SQL");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[Fail] Test_Insert_Data_SQL: {ex.Message}");
+            Console.WriteLine($"[失败] Test_Insert_Data_SQL: {ex.Message}");
             try
             {
                 await sessionPool.DeleteDatabaseAsync(dbName);
@@ -276,11 +276,11 @@ public class Session_pool_Test
     }
 
     /// <summary>
-    /// Test 6: Execute query operations
+    /// 测试 6: 执行查询操作
     /// </summary>
     public async Task Test_Query_Operations()
     {
-        Console.WriteLine("[Test] Execute query operations");
+        Console.WriteLine("[测试] 执行查询操作");
 
         var sessionPool = new SessionPool(_nodeUrls, _username, _password, _fetchSize, _zoneId, _poolSize, _enableRpcCompression, _timeout);
 
@@ -288,37 +288,37 @@ public class Session_pool_Test
         {
             await sessionPool.Open();
 
-            // Show databases
+            // 显示数据库
             Console.WriteLine("  SHOW DATABASES:");
             await sessionPool.ExecuteNonQueryStatementAsync("SHOW DATABASES");
-            Console.WriteLine("    - Executed");
+            Console.WriteLine("    - 已执行");
 
-            // Show version
+            // 显示版本
             Console.WriteLine("  SHOW VERSION:");
             await sessionPool.ExecuteNonQueryStatementAsync("SHOW VERSION");
-            Console.WriteLine("    - Executed");
+            Console.WriteLine("    - 已执行");
 
-            // Show cluster info
+            // 显示集群信息
             Console.WriteLine("  SHOW CLUSTER:");
             await sessionPool.ExecuteNonQueryStatementAsync("SHOW CLUSTER");
-            Console.WriteLine("    - Executed");
+            Console.WriteLine("    - 已执行");
 
             await sessionPool.Close();
-            Console.WriteLine("[Pass] Test_Query_Operations");
+            Console.WriteLine("[通过] Test_Query_Operations");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[Fail] Test_Query_Operations: {ex.Message}");
+            Console.WriteLine($"[失败] Test_Query_Operations: {ex.Message}");
             try { await sessionPool.Close(); } catch { }
         }
     }
 
     /// <summary>
-    /// Test 7: Execute non-query statement
+    /// 测试 7: 执行非查询语句
     /// </summary>
     public async Task Test_NonQuery_Statement()
     {
-        Console.WriteLine("[Test] Execute non-query statement");
+        Console.WriteLine("[测试] 执行非查询语句");
 
         var sessionPool = new SessionPool(_nodeUrls, _username, _password, _fetchSize, _zoneId, _poolSize, _enableRpcCompression, _timeout);
         var dbName = "test_pool_sql_db";
@@ -327,20 +327,20 @@ public class Session_pool_Test
         {
             await sessionPool.Open();
 
-            // Create database via SQL
+            // 通过 SQL 创建数据库
             var result = await sessionPool.ExecuteNonQueryStatementAsync($"CREATE DATABASE {dbName}");
-            Console.WriteLine($"  CREATE DATABASE result: {result}");
+            Console.WriteLine($"  CREATE DATABASE 结果: {result}");
 
-            // Drop database
+            // 删除数据库
             result = await sessionPool.ExecuteNonQueryStatementAsync($"DROP DATABASE {dbName}");
-            Console.WriteLine($"  DROP DATABASE result: {result}");
+            Console.WriteLine($"  DROP DATABASE 结果: {result}");
 
             await sessionPool.Close();
-            Console.WriteLine("[Pass] Test_NonQuery_Statement");
+            Console.WriteLine("[通过] Test_NonQuery_Statement");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[Fail] Test_NonQuery_Statement: {ex.Message}");
+            Console.WriteLine($"[失败] Test_NonQuery_Statement: {ex.Message}");
             try
             {
                 await sessionPool.ExecuteNonQueryStatementAsync($"DROP DATABASE IF EXISTS {dbName}");
@@ -351,12 +351,12 @@ public class Session_pool_Test
     }
 
     /// <summary>
-    /// Test 8: Pool health metrics monitoring
-    /// Tests the health metrics introduced in the commit fix
+    /// 测试 8: 连接池健康指标监控
+    /// 测试 commit 修复中引入的健康指标
     /// </summary>
     public async Task Test_Pool_Health_Metrics()
     {
-        Console.WriteLine("[Test] Pool health metrics monitoring");
+        Console.WriteLine("[测试] 连接池健康指标监控");
 
         var sessionPool = new SessionPool(_nodeUrls, _username, _password, _fetchSize, _zoneId, _poolSize, _enableRpcCompression, _timeout);
 
@@ -364,39 +364,39 @@ public class Session_pool_Test
         {
             await sessionPool.Open();
 
-            Console.WriteLine("  Initial pool state:");
-            Console.WriteLine($"    - Available clients: {sessionPool.AvailableClients}");
-            Console.WriteLine($"    - Total pool size: {sessionPool.TotalPoolSize}");
-            Console.WriteLine($"    - Failed reconnections: {sessionPool.FailedReconnections}");
+            Console.WriteLine("  初始连接池状态:");
+            Console.WriteLine($"    - 可用客户端数: {sessionPool.AvailableClients}");
+            Console.WriteLine($"    - 连接池总大小: {sessionPool.TotalPoolSize}");
+            Console.WriteLine($"    - 重连失败次数: {sessionPool.FailedReconnections}");
 
-            // Execute multiple operations to observe pool behavior
-            Console.WriteLine("  Executing 5 queries...");
+            // 执行多次操作观察连接池行为
+            Console.WriteLine("  执行 5 次查询...");
             for (int i = 0; i < 5; i++)
             {
                 await sessionPool.ExecuteNonQueryStatementAsync("SHOW VERSION");
-                Console.WriteLine($"    Query {i + 1}: Available={sessionPool.AvailableClients}, Failed={sessionPool.FailedReconnections}");
+                Console.WriteLine($"    查询 {i + 1}: 可用={sessionPool.AvailableClients}, 失败={sessionPool.FailedReconnections}");
             }
 
-            Console.WriteLine("  Final pool state:");
-            Console.WriteLine($"    - Available clients: {sessionPool.AvailableClients}");
-            Console.WriteLine($"    - Failed reconnections: {sessionPool.FailedReconnections}");
+            Console.WriteLine("  最终连接池状态:");
+            Console.WriteLine($"    - 可用客户端数: {sessionPool.AvailableClients}");
+            Console.WriteLine($"    - 重连失败次数: {sessionPool.FailedReconnections}");
 
             await sessionPool.Close();
-            Console.WriteLine("[Pass] Test_Pool_Health_Metrics");
+            Console.WriteLine("[通过] Test_Pool_Health_Metrics");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[Fail] Test_Pool_Health_Metrics: {ex.Message}");
+            Console.WriteLine($"[失败] Test_Pool_Health_Metrics: {ex.Message}");
             try { await sessionPool.Close(); } catch { }
         }
     }
 
     /// <summary>
-    /// Test 9: Timezone operations
+    /// 测试 9: 时区操作
     /// </summary>
     public async Task Test_Timezone_Operations()
     {
-        Console.WriteLine("[Test] Timezone operations");
+        Console.WriteLine("[测试] 时区操作");
 
         var sessionPool = new SessionPool(_nodeUrls, _username, _password, _fetchSize, _zoneId, _poolSize, _enableRpcCompression, _timeout);
 
@@ -404,37 +404,37 @@ public class Session_pool_Test
         {
             await sessionPool.Open();
 
-            // Get timezone
+            // 获取时区
             var tz = await sessionPool.GetTimeZone();
-            Console.WriteLine($"  Current timezone: {tz}");
+            Console.WriteLine($"  当前时区: {tz}");
 
-            // Set timezone to UTC
+            // 设置时区为 UTC
             await sessionPool.SetTimeZone("UTC");
             tz = await sessionPool.GetTimeZone();
-            Console.WriteLine($"  After set UTC: {tz}");
+            Console.WriteLine($"  设置 UTC 后: {tz}");
 
-            // Restore timezone
+            // 恢复时区
             await sessionPool.SetTimeZone(_zoneId);
             tz = await sessionPool.GetTimeZone();
-            Console.WriteLine($"  Restored timezone: {tz}");
+            Console.WriteLine($"  恢复时区: {tz}");
 
             await sessionPool.Close();
-            Console.WriteLine("[Pass] Test_Timezone_Operations");
+            Console.WriteLine("[通过] Test_Timezone_Operations");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[Fail] Test_Timezone_Operations: {ex.Message}");
+            Console.WriteLine($"[失败] Test_Timezone_Operations: {ex.Message}");
             try { await sessionPool.Close(); } catch { }
         }
     }
 
     /// <summary>
-    /// Test 10: Concurrent pool operations
-    /// Tests thread-safe connection handling after the fix
+    /// 测试 10: 并发连接池操作
+    /// 测试修复后的线程安全连接处理
     /// </summary>
     public async Task Test_Concurrent_Operations()
     {
-        Console.WriteLine("[Test] Concurrent pool operations");
+        Console.WriteLine("[测试] 并发连接池操作");
 
         var sessionPool = new SessionPool(_nodeUrls, _username, _password, _fetchSize, _zoneId, _poolSize, _enableRpcCompression, _timeout);
 
@@ -442,7 +442,7 @@ public class Session_pool_Test
         {
             await sessionPool.Open();
 
-            // Run concurrent operations
+            // 运行并发操作
             var tasks = new List<Task>();
 
             for (int i = 0; i < 5; i++)
@@ -462,25 +462,25 @@ public class Session_pool_Test
             }
 
             await Task.WhenAll(tasks);
-            Console.WriteLine($"  Completed {tasks.Count} concurrent operations");
-            Console.WriteLine($"  Pool state: Available={sessionPool.AvailableClients}, Failed={sessionPool.FailedReconnections}");
+            Console.WriteLine($"  完成 {tasks.Count} 个并发操作");
+            Console.WriteLine($"  连接池状态: 可用={sessionPool.AvailableClients}, 失败={sessionPool.FailedReconnections}");
 
             await sessionPool.Close();
-            Console.WriteLine("[Pass] Test_Concurrent_Operations");
+            Console.WriteLine("[通过] Test_Concurrent_Operations");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[Fail] Test_Concurrent_Operations: {ex.Message}");
+            Console.WriteLine($"[失败] Test_Concurrent_Operations: {ex.Message}");
             try { await sessionPool.Close(); } catch { }
         }
     }
 
     /// <summary>
-    /// Test 11: Batch insert using SQL
+    /// 测试 11: 使用 SQL 批量插入
     /// </summary>
     public async Task Test_Batch_Insert_SQL()
     {
-        Console.WriteLine("[Test] Batch insert using SQL");
+        Console.WriteLine("[测试] 使用 SQL 批量插入");
 
         var sessionPool = new SessionPool(_nodeUrls, _username, _password, _fetchSize, _zoneId, _poolSize, _enableRpcCompression, _timeout);
         var dbName = "test_pool_batch_db";
@@ -489,32 +489,32 @@ public class Session_pool_Test
         {
             await sessionPool.Open();
 
-            // Setup
+            // 环境准备
             await sessionPool.CreateDatabase(dbName);
             await sessionPool.ExecuteNonQueryStatementAsync($"CREATE TIMESERIES {dbName}.d1.value WITH DATATYPE=INT64, ENCODING=PLAIN");
-            Console.WriteLine($"  Setup completed");
+            Console.WriteLine($"  环境准备完成");
 
-            // Batch insert
+            // 批量插入
             var baseTimestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             for (int i = 0; i < 10; i++)
             {
                 var insertSql = $"INSERT INTO {dbName}.d1(timestamp, value) VALUES({baseTimestamp + i}, {i * 100})";
                 await sessionPool.ExecuteNonQueryStatementAsync(insertSql);
             }
-            Console.WriteLine($"  Inserted 10 records");
+            Console.WriteLine($"  已插入 10 条记录");
 
-            // Query count
+            // 查询计数
             await sessionPool.ExecuteNonQueryStatementAsync($"SELECT count(value) FROM {dbName}.d1");
-            Console.WriteLine($"  Count query executed");
+            Console.WriteLine($"  计数查询已执行");
 
-            // Cleanup
+            // 清理
             await sessionPool.DeleteDatabaseAsync(dbName);
             await sessionPool.Close();
-            Console.WriteLine("[Pass] Test_Batch_Insert_SQL");
+            Console.WriteLine("[通过] Test_Batch_Insert_SQL");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[Fail] Test_Batch_Insert_SQL: {ex.Message}");
+            Console.WriteLine($"[失败] Test_Batch_Insert_SQL: {ex.Message}");
             try
             {
                 await sessionPool.DeleteDatabaseAsync(dbName);
@@ -525,12 +525,12 @@ public class Session_pool_Test
     }
 
     /// <summary>
-    /// Test 12: Pool reconnection behavior
-    /// Tests the reconnection fix from commit 6f451bdff65a816f1ac59a266875b41ad2610af8
+    /// 测试 12: 连接池重连行为
+    /// 测试 commit 6f451bdff65a816f1ac59a266875b41ad2610af8 中的重连修复
     /// </summary>
     public async Task Test_Pool_Reconnection_Behavior()
     {
-        Console.WriteLine("[Test] Pool reconnection behavior");
+        Console.WriteLine("[测试] 连接池重连行为");
 
         var sessionPool = new SessionPool(_nodeUrls, _username, _password, _fetchSize, _zoneId, _poolSize, _enableRpcCompression, _timeout);
 
@@ -538,60 +538,60 @@ public class Session_pool_Test
         {
             await sessionPool.Open();
 
-            Console.WriteLine("  Testing pool stability...");
+            Console.WriteLine("  测试连接池稳定性...");
 
-            // Execute many operations to test reconnection handling
+            // 执行多次操作测试重连处理
             for (int batch = 0; batch < 3; batch++)
             {
-                Console.WriteLine($"  Batch {batch + 1}:");
+                Console.WriteLine($"  批次 {batch + 1}:");
 
                 for (int i = 0; i < 5; i++)
                 {
                     await sessionPool.ExecuteNonQueryStatementAsync("SHOW VERSION");
                 }
 
-                Console.WriteLine($"    Available: {sessionPool.AvailableClients}, Failed reconnections: {sessionPool.FailedReconnections}");
+                Console.WriteLine($"    可用: {sessionPool.AvailableClients}, 重连失败: {sessionPool.FailedReconnections}");
             }
 
-            // Check final pool health
-            Console.WriteLine("  Final pool health:");
-            Console.WriteLine($"    - Available clients: {sessionPool.AvailableClients}/{sessionPool.TotalPoolSize}");
-            Console.WriteLine($"    - Failed reconnections: {sessionPool.FailedReconnections}");
+            // 检查最终连接池健康状态
+            Console.WriteLine("  最终连接池健康状态:");
+            Console.WriteLine($"    - 可用客户端数: {sessionPool.AvailableClients}/{sessionPool.TotalPoolSize}");
+            Console.WriteLine($"    - 重连失败次数: {sessionPool.FailedReconnections}");
 
             await sessionPool.Close();
-            Console.WriteLine("[Pass] Test_Pool_Reconnection_Behavior");
+            Console.WriteLine("[通过] Test_Pool_Reconnection_Behavior");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[Fail] Test_Pool_Reconnection_Behavior: {ex.Message}");
+            Console.WriteLine($"[失败] Test_Pool_Reconnection_Behavior: {ex.Message}");
             try { await sessionPool.Close(); } catch { }
         }
     }
 
     /// <summary>
-    /// Run all SessionPool tests
+    /// 运行所有 SessionPool 测试
     /// </summary>
     public async Task RunAllTests()
     {
         Console.WriteLine("\n========================================");
-        Console.WriteLine("Running SessionPool Test Suite (3C3D Cluster)");
-        Console.WriteLine("Based on commit 6f451bdff65a816f1ac59a266875b41ad2610af8");
+        Console.WriteLine("运行 SessionPool 测试套件 (3C3D 集群)");
+        Console.WriteLine("基于 commit 6f451bdff65a816f1ac59a266875b41ad2610af8");
         Console.WriteLine("========================================\n");
 
         var tests = new List<(string Name, Func<Task> Test)>
         {
-            ("Cluster Connection", Test_SessionPool_Cluster_Connection),
-            ("Single Node", Test_SessionPool_Single_Node),
-            ("Create Database", Test_Create_Database),
-            ("Create Timeseries SQL", Test_Create_Timeseries_SQL),
-            ("Insert Data SQL", Test_Insert_Data_SQL),
-            ("Query Operations", Test_Query_Operations),
-            ("NonQuery Statement", Test_NonQuery_Statement),
-            ("Pool Health Metrics", Test_Pool_Health_Metrics),
-            ("Timezone Operations", Test_Timezone_Operations),
-            ("Concurrent Operations", Test_Concurrent_Operations),
-            ("Batch Insert SQL", Test_Batch_Insert_SQL),
-            ("Pool Reconnection Behavior", Test_Pool_Reconnection_Behavior),
+            ("集群连接", Test_SessionPool_Cluster_Connection),
+            ("单节点连接", Test_SessionPool_Single_Node),
+            ("创建数据库", Test_Create_Database),
+            ("创建时间序列 SQL", Test_Create_Timeseries_SQL),
+            ("插入数据 SQL", Test_Insert_Data_SQL),
+            ("查询操作", Test_Query_Operations),
+            ("非查询语句", Test_NonQuery_Statement),
+            ("连接池健康指标", Test_Pool_Health_Metrics),
+            ("时区操作", Test_Timezone_Operations),
+            ("并发操作", Test_Concurrent_Operations),
+            ("批量插入 SQL", Test_Batch_Insert_SQL),
+            ("连接池重连行为", Test_Pool_Reconnection_Behavior),
         };
 
         int passed = 0;
@@ -607,14 +607,14 @@ public class Session_pool_Test
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[Exception] {ex.Message}");
+                Console.WriteLine($"[异常] {ex.Message}");
                 failed++;
             }
             Console.WriteLine();
         }
 
         Console.WriteLine("\n========================================");
-        Console.WriteLine($"Test Results: {passed} passed, {failed} failed");
+        Console.WriteLine($"测试结果: {passed} 通过, {failed} 失败");
         Console.WriteLine("========================================\n");
     }
 }
